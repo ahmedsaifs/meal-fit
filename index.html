@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Calculator</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Montserrat:wght@400;600&display=swap">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Calorie Calculator</a></li>
+                <li><a href="meal-plans.html">Meal Plans</a></li>
+                <li><a href="gym-workouts.html">Gym Workouts</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Calorie Calculator Section -->
+        <div id="calculator" class="calculator">
+            <h1>Calorie Calculator</h1>
+            <form id="calorie-form">
+                <!-- Gender Selection -->
+                <label for="gender">Gender</label>
+                <select id="gender" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+
+                <!-- Age Input -->
+                <label for="age">Age (years)</label>
+                <input type="number" id="age" required>
+
+                <!-- Weight Input -->
+                <label for="weight">Weight (kg)</label>
+                <input type="number" id="weight" required>
+
+                <!-- Height Input -->
+                <label for="height">Height (cm)</label>
+                <input type="number" id="height" required>
+
+                <!-- Activity Level Selection -->
+                <label for="activity">Activity Level</label>
+                <select id="activity" required>
+                    <option value="1.2">Sedentary (little or no exercise)</option>
+                    <option value="1.375">Lightly active (light exercise 1-3 days/week)</option>
+                    <option value="1.55">Moderately active (moderate exercise 3-5 days/week)</option>
+                    <option value="1.725">Very active (hard exercise 6-7 days/week)</option>
+                    <option value="1.9">Super active (very hard exercise, physical job)</option>
+                </select>
+
+                <!-- Goal Selection -->
+                <label for="goal">Goal</label>
+                <select id="goal" required>
+                    <option value="none">Select a goal</option>
+                    <option value="lose">Lose weight</option>
+                    <option value="gain">Gain weight</option>
+                    <option value="cutting">Cutting</option>
+                    <option value="bulking">Bulking</option>
+                </select>
+
+                <!-- Optional Advanced Measurements -->
+                <div id="advanced-measurements">
+                    <h3>Advanced Measurements</h3>
+                    <label for="neck">Neck Circumference (cm)</label>
+                    <input type="number" id="neck" step="0.1">
+
+                    <label for="waist">Waist Circumference (cm)</label>
+                    <input type="number" id="waist" step="0.1">
+
+                    <label for="leg-length">Leg Length (cm)</label>
+                    <input type="number" id="leg-length" step="0.1">
+                </div>
+
+                <!-- Calculate Button -->
+                <button type="button" onclick="calculateCalories()">Calculate</button>
+            </form>
+
+            <!-- Result Display -->
+            <div id="result"></div>
+        </div>
+
+        <!-- Description Section -->
+        <div class="description">
+            <h2>About BMR Calculation</h2>
+            <p>This Calorie Calculator uses basic and advanced measurements to estimate your daily caloric needs based on your activity level and other factors.</p>
+        </div>
+    </div>
+
+    <!-- JavaScript for Calculation -->
+    <script>
+        function calculateCalories() {
+            // Get values from the form inputs
+            const gender = document.getElementById('gender').value;
+            const age = parseInt(document.getElementById('age').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const activity = parseFloat(document.getElementById('activity').value);
+            const goal = document.getElementById('goal').value;
+
+            // Optional advanced measurements (set to 0 if not provided)
+            const neck = parseFloat(document.getElementById('neck').value) || 0;
+            const waist = parseFloat(document.getElementById('waist').value) || 0;
+            const legLength = parseFloat(document.getElementById('leg-length').value) || 0;
+
+            // Validate input
+            if (isNaN(age) || isNaN(weight) || isNaN(height) || isNaN(activity)) {
+                alert('Please enter valid numbers for all required fields.');
+                return;
+            }
+
+            // Calculate BMR (Basal Metabolic Rate) based on gender
+            let bmr;
+            if (gender === 'male') {
+                bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+            } else {
+                bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+            }
+
+            // Calculate daily caloric needs based on BMR and activity level
+            let dailyCalories = bmr * activity;
+
+            // Adjust based on goal
+            if (goal === 'lose') {
+                dailyCalories -= 500; // Subtract 500 calories for weight loss
+            } else if (goal === 'gain') {
+                dailyCalories += 500; // Add 500 calories for weight gain
+            } else if (goal === 'cutting') {
+                dailyCalories -= 300; // Subtract 300 calories for cutting
+            } else if (goal === 'bulking') {
+                dailyCalories += 300; // Add 300 calories for bulking
+            }
+
+            // Display the result
+            document.getElementById('result').innerText = `Your estimated daily caloric needs are ${dailyCalories.toFixed(2)} calories.`;
+        }
+    </script>
+</body>
+</html>
